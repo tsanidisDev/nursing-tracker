@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-09-03
+
+### Fixed
+- **Entity Configuration Issue**: Fixed "Entity is neither a valid entity ID nor a valid UUID" error
+- **Button Mapping Configuration**: Replaced EntitySelector with TextSelector for better flexibility
+- **Optional Entity Fields**: Users can now leave entity mapping fields blank without validation errors
+- **Empty String Handling**: Improved filtering of empty entity mappings in coordinator
+- **Translation File**: Fixed empty translation file that caused config flow loading errors
+
+### Improved
+- **Configuration UI**: Enhanced entity mapping form with clearer instructions
+- **Error Messages**: Better validation and error handling for entity configuration
+- **Documentation**: Updated usage guide with entity ID examples and troubleshooting
+- **User Experience**: More intuitive setup process for button mapping
+
+### Technical
+- Updated config flow to use TextSelector instead of EntitySelector
+- Enhanced entity state listener setup with proper empty value filtering
+- Improved translation strings with detailed instructions
+- Added comprehensive release automation and HACS update process
+
 ## [1.0.0] - 2025-09-03
 
 ### Added

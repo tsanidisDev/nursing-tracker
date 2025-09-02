@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate version
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          MANIFEST_VERSION=$(grep -o '"version": "[^"]*"' custom_components/baby_care_tracker/manifest.json | cut -d'"' -f4)
+          
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "❌ Version mismatch!"
+            echo "Tag version: $TAG_VERSION"
+            echo "Manifest version: $MANIFEST_VERSION"
+            exit 1
+          fi
+          
+          echo "✅ Version validation passed: $TAG_VERSION"
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Baby Care Tracker ${{ github.ref }}
+          body: |
+            ## 🍼 Baby Care Tracker ${{ github.ref }}
+            
+            ### What's New
+            - See [CHANGELOG.md](https://github.com/tsanidisDev/nursing-tracker/blob/main/CHANGELOG.md) for details
+            
+            ### Installation
+            - **HACS**: Update via HACS integrations  
+            - **Manual**: Download source code and copy to `custom_components/baby_care_tracker`
+            
+            ### For Mothers 👶
+            Perfect for tracking baby care activities with smart button integration!
+            
+            ---
+            
+            **Full Changelog**: https://github.com/tsanidisDev/nursing-tracker/compare/v1.0.0...${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Notify HACS
+        run: |
+          echo "🏠 HACS will automatically detect this release within 30-60 minutes"
+          echo "🔄 Users will see update notifications in Home Assistant"
