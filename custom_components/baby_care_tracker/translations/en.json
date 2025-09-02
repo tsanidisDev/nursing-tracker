@@ -1,0 +1,52 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Baby Care Tracker",
+                "description": "Set up tracking for your baby's care activities",
+                "data": {
+                    "baby_name": "Baby's Name",
+                    "birth_date": "Birth Date (Optional)"
+                }
+            },
+            "entity_mapping": {
+                "title": "Button & Entity Mapping",
+                "description": "Map physical buttons and smart devices to baby care actions. When these entities change state, the corresponding baby care action will be triggered automatically.",
+                "data": {
+                    "feeding_start_left_entity": "Start Left Breast Feeding",
+                    "feeding_start_right_entity": "Start Right Breast Feeding", 
+                    "feeding_stop_entity": "Stop Feeding",
+                    "sleep_start_entity": "Start Sleep",
+                    "wake_up_entity": "Wake Up",
+                    "diaper_pee_entity": "Log Pee Diaper",
+                    "diaper_poo_entity": "Log Poo Diaper",
+                    "diaper_both_entity": "Log Both (Pee & Poo)"
+                }
+            }
+        },
+        "error": {
+            "unknown": "Unknown error occurred"
+        },
+        "abort": {
+            "already_configured": "Baby Care Tracker is already configured for this baby"
+        }
+    },
+    "options": {
+        "step": {
+            "entity_mapping": {
+                "title": "Configure Button Mapping",
+                "description": "Map your physical buttons, switches, or other entities to baby care actions. Leave empty to disable automatic triggering for that action.",
+                "data": {
+                    "feeding_start_left_entity": "Entity for Starting Left Breast Feeding",
+                    "feeding_start_right_entity": "Entity for Starting Right Breast Feeding",
+                    "feeding_stop_entity": "Entity for Stopping Feeding",
+                    "sleep_start_entity": "Entity for Starting Sleep",
+                    "wake_up_entity": "Entity for Waking Up",
+                    "diaper_pee_entity": "Entity for Logging Pee Diaper",
+                    "diaper_poo_entity": "Entity for Logging Poo Diaper",
+                    "diaper_both_entity": "Entity for Logging Both Types"
+                }
+            }
+        }
+    }
+}
