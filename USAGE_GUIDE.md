@@ -61,20 +61,33 @@ git push origin v1.0.0
 
 ### Button Mapping Examples
 
-Map physical buttons to baby actions:
+Map physical buttons to baby actions by entering entity IDs:
 
 ```yaml
-# Example: 4-button remote control
-Button 1: Start Left Breast Feeding
-Button 2: Start Right Breast Feeding  
-Button 3: Stop Feeding
-Button 4: Sleep/Wake Toggle
+# Example entity IDs to enter in the configuration:
 
-# Example: Smart switches for diaper tracking
-Switch 1: Log Pee Diaper
-Switch 2: Log Poo Diaper
-Switch 3: Log Both Types
+# For Zigbee buttons:
+Start Left Breast Feeding: button.nursery_button_1
+Start Right Breast Feeding: button.nursery_button_2
+Stop Feeding: button.nursery_button_3
+
+# For smart switches:
+Log Pee Diaper: switch.diaper_switch_1
+Log Poo Diaper: switch.diaper_switch_2
+Log Both Types: switch.diaper_switch_3
+
+# For input buttons (created in HA):
+Start Sleep: input_button.baby_sleep_button
+Wake Up: input_button.baby_wake_button
+
+# Leave blank if you don't want to map that action
 ```
+
+**How to find entity IDs:**
+1. Go to **Developer Tools** → **States** in Home Assistant
+2. Find your button/switch entity
+3. Copy the entity ID (e.g., `button.my_button_1`)
+4. Paste it into the configuration field
 
 ### Dashboard Usage
 
@@ -166,11 +179,18 @@ tail -f /path/to/homeassistant/config/home-assistant.log | grep baby_care_tracke
    - Ensure files are copied to the right directory
    - Restart Home Assistant completely
 
-2. **"Button mapping not working"**
+2. **"Entity is neither a valid entity ID nor a valid UUID"**
+   - ✅ **FIXED**: You can now leave entity fields blank
+   - Enter full entity IDs like `button.my_button` or leave empty
+   - Check entity IDs in Developer Tools → States
+
+3. **"Button mapping not working"**
    - Verify entity IDs exist in Home Assistant
    - Check entity states in Developer Tools
+   - Ensure entities are available (not unavailable/unknown)
+   - Test entity state changes manually first
 
-3. **"Services not available"**
+4. **"Services not available"**
    - Integration may not be loaded properly
    - Check logs for errors
 
