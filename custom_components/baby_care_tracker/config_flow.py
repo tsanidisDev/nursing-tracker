@@ -97,68 +97,52 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             step_id="entity_mapping",
             data_schema=vol.Schema(
                 {
-                    vol.Optional(
-                        CONF_FEEDING_START_LEFT,
-                        default=current_options.get(CONF_FEEDING_START_LEFT, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_FEEDING_START_LEFT): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_FEEDING_START_RIGHT,
-                        default=current_options.get(CONF_FEEDING_START_RIGHT, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_FEEDING_START_RIGHT): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_FEEDING_STOP,
-                        default=current_options.get(CONF_FEEDING_STOP, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_FEEDING_STOP): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_SLEEP_START,
-                        default=current_options.get(CONF_SLEEP_START, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_SLEEP_START): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_WAKE_UP,
-                        default=current_options.get(CONF_WAKE_UP, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_WAKE_UP): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_DIAPER_PEE,
-                        default=current_options.get(CONF_DIAPER_PEE, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_DIAPER_PEE): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_DIAPER_POO,
-                        default=current_options.get(CONF_DIAPER_POO, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_DIAPER_POO): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
-                    vol.Optional(
-                        CONF_DIAPER_BOTH,
-                        default=current_options.get(CONF_DIAPER_BOTH, ""),
-                    ): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.TEXT
+                    vol.Optional(CONF_DIAPER_BOTH): selector.EntitySelector(
+                        selector.EntitySelectorConfig(
+                            domain=["switch", "button", "input_button", "binary_sensor"],
+                            multiple=False,
                         )
                     ),
                 }
@@ -166,8 +150,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             description_placeholders={
                 "entity_mapping_help": (
                     "Map your physical buttons, switches, or other entities to baby care actions. "
-                    "Enter the full entity ID (e.g., 'button.nursery_button_1', 'switch.diaper_switch') "
-                    "or leave blank to disable automatic triggering for that action. "
+                    "Select entities from the dropdown or leave blank to disable automatic triggering for that action. "
                     "When these entities change state, the corresponding baby care action will be triggered."
                 )
             },

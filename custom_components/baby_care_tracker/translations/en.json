@@ -11,16 +11,16 @@
             },
             "entity_mapping": {
                 "title": "Button & Entity Mapping",
-                "description": "Map physical buttons and smart devices to baby care actions. Enter full entity IDs (e.g., 'button.nursery_button_1') or leave blank to disable. When these entities change state, the corresponding baby care action will be triggered automatically.",
+                "description": "Map physical buttons and smart devices to baby care actions. Select entities from the dropdown or leave blank to disable. When these entities change state, the corresponding baby care action will be triggered automatically.",
                 "data": {
-                    "feeding_start_left_entity": "Start Left Breast Feeding (Entity ID)",
-                    "feeding_start_right_entity": "Start Right Breast Feeding (Entity ID)", 
-                    "feeding_stop_entity": "Stop Feeding (Entity ID)",
-                    "sleep_start_entity": "Start Sleep (Entity ID)",
-                    "wake_up_entity": "Wake Up (Entity ID)",
-                    "diaper_pee_entity": "Log Pee Diaper (Entity ID)",
-                    "diaper_poo_entity": "Log Poo Diaper (Entity ID)",
-                    "diaper_both_entity": "Log Both (Pee & Poo) (Entity ID)"
+                    "feeding_start_left_entity": "Start Left Breast Feeding",
+                    "feeding_start_right_entity": "Start Right Breast Feeding", 
+                    "feeding_stop_entity": "Stop Feeding",
+                    "sleep_start_entity": "Start Sleep",
+                    "wake_up_entity": "Wake Up",
+                    "diaper_pee_entity": "Log Pee Diaper",
+                    "diaper_poo_entity": "Log Poo Diaper",
+                    "diaper_both_entity": "Log Both (Pee & Poo)"
                 }
             }
         },
@@ -35,7 +35,7 @@
         "step": {
             "entity_mapping": {
                 "title": "Configure Button Mapping",
-                "description": "Map your physical buttons, switches, or other entities to baby care actions. Enter the full entity ID (e.g. 'button.nursery_button_1') or leave empty to disable automatic triggering for that action.",
+                "description": "Map your physical buttons, switches, or other entities to baby care actions. Select from the dropdown or leave blank to disable automatic triggering for that action.",
                 "data": {
                     "feeding_start_left_entity": "Entity for Starting Left Breast Feeding",
                     "feeding_start_right_entity": "Entity for Starting Right Breast Feeding",

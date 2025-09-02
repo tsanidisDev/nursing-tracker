@@ -210,7 +210,7 @@ class BabyCareCoordinator(DataUpdateCoordinator):
         }
 
         # Remove None and empty string entities
-        entity_mappings = {k: v for k, v in entity_mappings.items() if k and k.strip()}
+        entity_mappings = {k: v for k, v in entity_mappings.items() if k and str(k).strip()}
 
         if entity_mappings:
             listener = async_track_state_change_event(

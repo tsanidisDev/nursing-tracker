@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-09-03
+
+### Fixed
+- **Entity Dropdown Restored**: Brought back entity selector dropdowns for easier configuration
+- **Optional Field Handling**: Properly handle None values when entity fields are left blank
+- **Configuration UX**: Improved user experience with familiar dropdown selectors
+
+### Improved
+- **Entity Selection**: Users can now select entities from dropdown menus instead of manual typing
+- **Validation**: Enhanced validation to handle optional entity mapping fields correctly
+- **Documentation**: Updated guides to reflect entity dropdown configuration
+
+### Technical
+- Replaced TextSelector with properly configured EntitySelector
+- Updated coordinator to handle None values from empty EntitySelector fields
+- Enhanced translation strings for better user guidance
+
 ## [1.0.2] - 2025-09-03
 
 ### Fixed

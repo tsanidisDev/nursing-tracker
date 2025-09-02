@@ -61,10 +61,10 @@ git push origin v1.0.0
 
 ### Button Mapping Examples
 
-Map physical buttons to baby actions by entering entity IDs:
+Map physical buttons to baby actions using the entity dropdown:
 
 ```yaml
-# Example entity IDs to enter in the configuration:
+# Select from dropdown in the configuration UI:
 
 # For Zigbee buttons:
 Start Left Breast Feeding: button.nursery_button_1
@@ -80,14 +80,14 @@ Log Both Types: switch.diaper_switch_3
 Start Sleep: input_button.baby_sleep_button
 Wake Up: input_button.baby_wake_button
 
-# Leave blank if you don't want to map that action
+# Leave unselected if you don't want to map that action
 ```
 
-**How to find entity IDs:**
-1. Go to **Developer Tools** → **States** in Home Assistant
-2. Find your button/switch entity
-3. Copy the entity ID (e.g., `button.my_button_1`)
-4. Paste it into the configuration field
+**How to configure:**
+1. Go to **Integration Settings** → **Configure**
+2. Select entities from dropdown menus
+3. Leave fields blank for actions you don't want to map
+4. Save configuration
 
 ### Dashboard Usage
 
@@ -179,10 +179,10 @@ tail -f /path/to/homeassistant/config/home-assistant.log | grep baby_care_tracke
    - Ensure files are copied to the right directory
    - Restart Home Assistant completely
 
-2. **"Entity is neither a valid entity ID nor a valid UUID"**
-   - ✅ **FIXED**: You can now leave entity fields blank
-   - Enter full entity IDs like `button.my_button` or leave empty
-   - Check entity IDs in Developer Tools → States
+2. **"Entity selector validation fixed"**
+   - ✅ **FIXED**: Entity dropdowns now work properly with optional fields
+   - Select entities from dropdown or leave blank
+   - No more validation errors for empty fields
 
 3. **"Button mapping not working"**
    - Verify entity IDs exist in Home Assistant
