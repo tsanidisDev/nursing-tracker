@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -27,30 +30,39 @@ jobs:
           echo "✅ Version validation passed: $TAG_VERSION"
 
       - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Baby Care Tracker ${{ github.ref }}
-          body: |
-            ## 🍼 Baby Care Tracker ${{ github.ref }}
-            
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          
+          # Check if release notes file exists for this version
+          RELEASE_NOTES_FILE="RELEASE_NOTES_${TAG_NAME}.md"
+          
+          if [ -f "$RELEASE_NOTES_FILE" ]; then
+            echo "📝 Using release notes from $RELEASE_NOTES_FILE"
+            gh release create "$TAG_NAME" \
+              --title "Baby Care Tracker $TAG_NAME - Enhanced Configuration UX" \
+              --notes-file "$RELEASE_NOTES_FILE"
+          else
+            echo "📝 Using default release notes"
+            gh release create "$TAG_NAME" \
+              --title "Baby Care Tracker $TAG_NAME" \
+              --notes "## 🍼 Baby Care Tracker $TAG_NAME
+
             ### What's New
             - See [CHANGELOG.md](https://github.com/tsanidisDev/nursing-tracker/blob/main/CHANGELOG.md) for details
             
             ### Installation
             - **HACS**: Update via HACS integrations  
-            - **Manual**: Download source code and copy to `custom_components/baby_care_tracker`
+            - **Manual**: Download source code and copy to \`custom_components/baby_care_tracker\`
             
             ### For Mothers 👶
             Perfect for tracking baby care activities with smart button integration!
             
             ---
             
-            **Full Changelog**: https://github.com/tsanidisDev/nursing-tracker/compare/v1.0.0...${{ github.ref }}
-          draft: false
-          prerelease: false
+            **Full Changelog**: https://github.com/tsanidisDev/nursing-tracker/compare/v1.0.0...$TAG_NAME"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify HACS
         run: |
