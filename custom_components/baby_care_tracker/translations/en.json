@@ -33,19 +33,17 @@
     },
     "options": {
         "step": {
-            "entity_mapping": {
-                "title": "Configure Button Mapping",
-                "description": "Map your physical buttons, switches, or other entities to baby care actions. Select from the dropdown or leave blank to disable automatic triggering for that action.",
+            "select_entities": {
+                "title": "Select Entities",
+                "description": "Choose the buttons, switches, or other entities you want to use for baby care actions.",
                 "data": {
-                    "feeding_start_left_entity": "Entity for Starting Left Breast Feeding",
-                    "feeding_start_right_entity": "Entity for Starting Right Breast Feeding",
-                    "feeding_stop_entity": "Entity for Stopping Feeding",
-                    "sleep_start_entity": "Entity for Starting Sleep",
-                    "wake_up_entity": "Entity for Waking Up",
-                    "diaper_pee_entity": "Entity for Logging Pee Diaper",
-                    "diaper_poo_entity": "Entity for Logging Poo Diaper",
-                    "diaper_both_entity": "Entity for Logging Both Types"
+                    "entities": "Select Entities to Configure"
                 }
+            },
+            "assign_actions": {
+                "title": "Assign Actions",
+                "description": "Assign baby care actions to your selected entities. Each entity can trigger one action when activated.",
+                "data": {}
             }
         }
     }

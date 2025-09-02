@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-01-21
+
+### Added
+- **Enhanced 2-Step Configuration Flow**: New intuitive configuration process for better UX
+- **Entity-First Selection**: Select your devices first, then assign actions
+- **Multi-Select Entity Picker**: Choose multiple entities at once in step 1
+- **Clear Action Assignment**: Dropdown menus for each entity in step 2
+
+### Changed
+- **Replaced Single-Form Configuration**: New 2-step process replaces complex single form
+- **Improved Button Mapping UX**: More logical flow for entity-to-action assignment
+- **Better Configuration Organization**: See all mappings clearly in step 2
+
+### Fixed
+- **Configuration Persistence**: Settings now save and load properly
+- **Entity Selection UX**: Eliminated configuration friction and confusion
+- **Action Assignment Clarity**: Each entity gets clear action selection
+
 ## [1.0.3] - 2025-09-03
 
 ### Fixed

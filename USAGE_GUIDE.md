@@ -59,35 +59,48 @@ git push origin v1.0.0
 2. **Optional Birth Date**: For age tracking
 3. **Configure Button Mapping** (optional but powerful!)
 
-### Button Mapping Examples
+### Button Mapping - New Enhanced UX
 
-Map physical buttons to baby actions using the entity dropdown:
+The integration now features a **2-step configuration process** for easier setup:
 
-```yaml
-# Select from dropdown in the configuration UI:
-
-# For Zigbee buttons:
-Start Left Breast Feeding: button.nursery_button_1
-Start Right Breast Feeding: button.nursery_button_2
-Stop Feeding: button.nursery_button_3
-
-# For smart switches:
-Log Pee Diaper: switch.diaper_switch_1
-Log Poo Diaper: switch.diaper_switch_2
-Log Both Types: switch.diaper_switch_3
-
-# For input buttons (created in HA):
-Start Sleep: input_button.baby_sleep_button
-Wake Up: input_button.baby_wake_button
-
-# Leave unselected if you don't want to map that action
-```
-
-**How to configure:**
+#### **Step 1: Select Your Entities**
 1. Go to **Integration Settings** → **Configure**
-2. Select entities from dropdown menus
-3. Leave fields blank for actions you don't want to map
-4. Save configuration
+2. **Select entities** you want to use from the multi-select dropdown
+3. Choose from: buttons, switches, input_buttons, binary_sensors
+
+#### **Step 2: Assign Actions**
+1. For each selected entity, choose what action it should trigger:
+   - **Start Left Breast Feeding**
+   - **Start Right Breast Feeding** 
+   - **Stop Feeding**
+   - **Start Sleep**
+   - **Wake Up**
+   - **Log Pee Diaper**
+   - **Log Poo Diaper**
+   - **Log Both (Pee & Poo)**
+   - **No Action** (to leave unmapped)
+
+#### **Benefits of New UX:**
+- ✅ **Entity-First Approach**: Select your available devices first
+- ✅ **Clear Action Assignment**: Easy dropdown for each entity
+- ✅ **Flexible Mapping**: One entity, one action (or none)
+- ✅ **Saved Configuration**: Settings are properly preserved
+- ✅ **Better Organization**: See all your mappings at once
+
+#### **Example Workflow:**
+```
+Step 1: Select Entities
+☑️ button.nursery_button_1
+☑️ button.nursery_button_2  
+☑️ switch.diaper_switch_1
+☑️ switch.diaper_switch_2
+
+Step 2: Assign Actions
+button.nursery_button_1 → Start Left Breast Feeding
+button.nursery_button_2 → Start Right Breast Feeding
+switch.diaper_switch_1 → Log Pee Diaper
+switch.diaper_switch_2 → Log Poo Diaper
+```
 
 ### Dashboard Usage
 
