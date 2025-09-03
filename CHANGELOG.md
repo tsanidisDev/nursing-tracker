@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2025-09-03
+
+### Fixed
+- **Configuration Persistence**: Fixed entity selections not saving when reopening settings
+- **Entity Mapping**: Corrected config key mapping between UI and coordinator
+- **Configuration Loading**: Existing configurations now properly load with saved selections
+
+### Added
+- **Specific Button Actions**: Support for mapping individual button actions (e.g., `arrow_left_hold`)
+- **IKEA TRÅDFRI Support**: Full support for TRÅDFRI Shortcut Button specific actions
+- **Button Event Listeners**: Enhanced coordinator to listen to ZHA and deCONZ button events
+- **Multiple Action Mapping**: Same button entity can be mapped multiple times with different specific actions
+
+### Enhanced
+- **Configuration Format**: Support for `entity:action` format to specify button actions
+- **Event Handling**: Dual support for state changes (switches) and events (button actions)
+- **User Experience**: Clear fields for entering specific button actions in configuration UI
+
+### Technical
+- Added button event listeners for `zha_event` and `deconz_event`
+- Enhanced config flow to handle button action specifications
+- Improved coordinator to parse and handle specific button action configurations
+
 ## [1.0.4] - 2025-01-21
 
 ### Added

@@ -59,9 +59,9 @@ git push origin v1.0.0
 2. **Optional Birth Date**: For age tracking
 3. **Configure Button Mapping** (optional but powerful!)
 
-### Button Mapping - New Enhanced UX
+### Button Mapping - Enhanced UX with Specific Actions
 
-The integration now features a **2-step configuration process** for easier setup:
+The integration now features a **2-step configuration process** with support for **specific button actions**:
 
 #### **Step 1: Select Your Entities**
 1. Go to **Integration Settings** → **Configure**
@@ -80,27 +80,64 @@ The integration now features a **2-step configuration process** for easier setup
    - **Log Both (Pee & Poo)**
    - **No Action** (to leave unmapped)
 
+2. **For button entities**, you can also specify **specific button actions**:
+   - Enter specific action names like `arrow_left_hold`, `arrow_right_click`
+   - This allows mapping individual button actions instead of any button press
+
+#### **Button Action Examples:**
+```
+Entity: button.ikea_tradfri_shortcut_button
+Action: Start Left Breast Feeding  
+Specific Action: arrow_left_hold
+
+Entity: button.ikea_tradfri_shortcut_button
+Action: Start Right Breast Feeding
+Specific Action: arrow_right_hold
+
+Entity: button.ikea_tradfri_shortcut_button  
+Action: Stop Feeding
+Specific Action: arrow_left_click
+```
+
 #### **Benefits of New UX:**
 - ✅ **Entity-First Approach**: Select your available devices first
 - ✅ **Clear Action Assignment**: Easy dropdown for each entity
 - ✅ **Flexible Mapping**: One entity, one action (or none)
 - ✅ **Saved Configuration**: Settings are properly preserved
 - ✅ **Better Organization**: See all your mappings at once
+- ✅ **Specific Button Actions**: Map individual button actions like `arrow_left_hold`
+
+#### **Supported Button Actions:**
+For IKEA TRÅDFRI Shortcut Button (E2001/E2002):
+- `arrow_left_click` - Arrow left push
+- `arrow_left_hold` - Arrow left hold  
+- `arrow_left_release` - Arrow left release
+- `arrow_right_click` - Arrow right push
+- `arrow_right_hold` - Arrow right hold
+- `arrow_right_release` - Arrow right release
+- `on` - Top button push
+- `brightness_move_up` - Top button hold
+- `brightness_stop` - Top button release
+- `off` - Bottom button push  
+- `brightness_move_down` - Bottom button hold
 
 #### **Example Workflow:**
 ```
 Step 1: Select Entities
-☑️ button.nursery_button_1
-☑️ button.nursery_button_2  
+☑️ button.ikea_tradfri_shortcut_button
 ☑️ switch.diaper_switch_1
 ☑️ switch.diaper_switch_2
 
 Step 2: Assign Actions
-button.nursery_button_1 → Start Left Breast Feeding
-button.nursery_button_2 → Start Right Breast Feeding
+button.ikea_tradfri_shortcut_button → Start Left Breast Feeding
+  └── Specific Action: arrow_left_hold
+button.ikea_tradfri_shortcut_button → Start Right Breast Feeding  
+  └── Specific Action: arrow_right_hold
 switch.diaper_switch_1 → Log Pee Diaper
 switch.diaper_switch_2 → Log Poo Diaper
 ```
+
+**Note**: You can map the same button entity multiple times with different specific actions!
 
 ### Dashboard Usage
 

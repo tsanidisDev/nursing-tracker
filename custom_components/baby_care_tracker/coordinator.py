@@ -194,34 +194,67 @@ class BabyCareCoordinator(DataUpdateCoordinator):
                 self.hass.services.async_remove(DOMAIN, service)
 
     async def async_setup_entity_listeners(self) -> None:
-        """Set up entity state change listeners for button mapping."""
+        """Set up entity state change listeners and event listeners for button mapping."""
         options = self.entry.options
         
-        # Mapping of entities to their corresponding actions
-        entity_mappings = {
-            options.get(CONF_FEEDING_START_LEFT): ("start_feeding", {"side": FEEDING_LEFT}),
-            options.get(CONF_FEEDING_START_RIGHT): ("start_feeding", {"side": FEEDING_RIGHT}),
-            options.get(CONF_FEEDING_STOP): ("stop_feeding", {}),
-            options.get(CONF_SLEEP_START): ("sleep_start", {}),
-            options.get(CONF_WAKE_UP): ("wake_up", {}),
-            options.get(CONF_DIAPER_PEE): ("log_diaper", {"type": DIAPER_PEE}),
-            options.get(CONF_DIAPER_POO): ("log_diaper", {"type": DIAPER_POO}),
-            options.get(CONF_DIAPER_BOTH): ("log_diaper", {"type": DIAPER_BOTH}),
+        # Parse entity configurations that may include specific button actions
+        parsed_configs = {}
+        button_event_configs = {}
+        
+        config_mappings = {
+            CONF_FEEDING_START_LEFT: ("start_feeding", {"side": FEEDING_LEFT}),
+            CONF_FEEDING_START_RIGHT: ("start_feeding", {"side": FEEDING_RIGHT}),
+            CONF_FEEDING_STOP: ("stop_feeding", {}),
+            CONF_SLEEP_START: ("sleep_start", {}),
+            CONF_WAKE_UP: ("wake_up", {}),
+            CONF_DIAPER_PEE: ("log_diaper", {"type": DIAPER_PEE}),
+            CONF_DIAPER_POO: ("log_diaper", {"type": DIAPER_POO}),
+            CONF_DIAPER_BOTH: ("log_diaper", {"type": DIAPER_BOTH}),
         }
+        
+        for config_key, (action, params) in config_mappings.items():
+            entity_config = options.get(config_key)
+            if not entity_config:
+                continue
+                
+            # Check if entity has specific button action (format: entity_id:action)
+            if ":" in str(entity_config):
+                entity_id, button_action = entity_config.split(":", 1)
+                button_event_configs[entity_id] = (action, params, button_action)
+                _LOGGER.debug(f"Configured button event: {entity_id} action {button_action} -> {action}")
+            else:
+                # Regular state change listener
+                parsed_configs[entity_config] = (action, params)
+                _LOGGER.debug(f"Configured state change: {entity_config} -> {action}")
 
-        # Remove None and empty string entities
-        entity_mappings = {k: v for k, v in entity_mappings.items() if k and str(k).strip()}
-
-        if entity_mappings:
+        # Set up state change listeners for regular entities
+        if parsed_configs:
             listener = async_track_state_change_event(
                 self.hass,
-                list(entity_mappings.keys()),
+                list(parsed_configs.keys()),
                 self._async_entity_state_changed,
             )
             self._entity_listeners.append(listener)
+            self._entity_mappings = parsed_configs
             
-            # Store mappings for use in the callback
-            self._entity_mappings = entity_mappings
+        # Set up event listeners for button actions
+        if button_event_configs:
+            # Listen to all events that might be from our buttons
+            listener = self.hass.bus.async_listen(
+                "zha_event",  # Zigbee events
+                self._async_button_event_received
+            )
+            self._entity_listeners.append(listener)
+            
+            # Also listen to deconz events for deCONZ users  
+            listener = self.hass.bus.async_listen(
+                "deconz_event",
+                self._async_button_event_received
+            )
+            self._entity_listeners.append(listener)
+            
+            # Store button event mappings
+            self._button_event_mappings = button_event_configs
 
     async def async_remove_entity_listeners(self) -> None:
         """Remove entity state change listeners."""
@@ -280,6 +313,40 @@ class BabyCareCoordinator(DataUpdateCoordinator):
                 await self._handle_log_wake_up_internal("Button triggered")
         except Exception as e:
             _LOGGER.error(f"Error triggering action {action}: {e}")
+
+    @callback
+    def _async_button_event_received(self, event: Event) -> None:
+        """Handle button events for specific button actions."""
+        if not hasattr(self, '_button_event_mappings'):
+            return
+            
+        event_data = event.data
+        device_id = event_data.get("device_id")
+        command = event_data.get("command")
+        
+        if not device_id or not command:
+            return
+            
+        # Find entity_id from device_id
+        entity_registry = self.hass.helpers.entity_registry.async_get(self.hass)
+        device_registry = self.hass.helpers.device_registry.async_get(self.hass)
+        
+        # Get entities for this device
+        entities = self.hass.helpers.entity_registry.async_entries_for_device(
+            entity_registry, device_id
+        )
+        
+        for entity_entry in entities:
+            entity_id = entity_entry.entity_id
+            if entity_id in self._button_event_mappings:
+                action, params, button_action = self._button_event_mappings[entity_id]
+                
+                # Check if this is the specific button action we're looking for
+                if command == button_action:
+                    _LOGGER.info(f"Button event {entity_id} action {command} triggered: {action} with params: {params}")
+                    # Schedule the action to run
+                    self.hass.async_create_task(self._async_trigger_action(action, params))
+                    break
 
     # Service handlers
     async def _handle_start_feeding(self, call: ServiceCall) -> None:

@@ -17,6 +17,14 @@ from .const import (
     CONF_BABY_NAME,
     CONF_BIRTH_DATE,
     DEFAULT_NAME,
+    CONF_FEEDING_START_LEFT,
+    CONF_FEEDING_START_RIGHT,
+    CONF_FEEDING_STOP,
+    CONF_SLEEP_START,
+    CONF_WAKE_UP,
+    CONF_DIAPER_PEE,
+    CONF_DIAPER_POO,
+    CONF_DIAPER_BOTH,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -102,14 +110,35 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             # Initialize mappings with current options
             current_options = self.config_entry.options
             self.entity_mappings = {}
+            self.entity_button_actions = {}
             
-            # Preserve existing mappings for selected entities
+            # Preserve existing mappings for selected entities - map back from config keys to entities
+            config_to_entity = {
+                CONF_FEEDING_START_LEFT: "feeding_start_left",
+                CONF_FEEDING_START_RIGHT: "feeding_start_right", 
+                CONF_FEEDING_STOP: "feeding_stop",
+                CONF_SLEEP_START: "sleep_start",
+                CONF_WAKE_UP: "wake_up",
+                CONF_DIAPER_PEE: "diaper_pee",
+                CONF_DIAPER_POO: "diaper_poo",
+                CONF_DIAPER_BOTH: "diaper_both",
+            }
+            
             for entity in self.current_entities:
                 # Find if this entity is already mapped
-                for action_key, entity_id in current_options.items():
-                    if entity_id == entity:
-                        self.entity_mappings[entity] = action_key
-                        break
+                for config_key, action_key in config_to_entity.items():
+                    entity_config = current_options.get(config_key)
+                    if entity_config:
+                        # Handle entity:action format
+                        if ":" in str(entity_config):
+                            entity_id, button_action = entity_config.split(":", 1)
+                            if entity_id == entity:
+                                self.entity_mappings[entity] = action_key
+                                self.entity_button_actions[entity] = button_action
+                                break
+                        elif entity_config == entity:
+                            self.entity_mappings[entity] = action_key
+                            break
                 else:
                     # Entity not mapped yet
                     self.entity_mappings[entity] = None
@@ -131,9 +160,23 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 },
             )
 
-        # Get currently configured entities
+        # Get currently configured entities from options
         current_options = self.config_entry.options
-        currently_mapped = [entity_id for entity_id in current_options.values() if entity_id]
+        currently_mapped = []
+        current_button_actions = {}
+        
+        # Extract entities from current configuration, handling button actions
+        for config_key in [CONF_FEEDING_START_LEFT, CONF_FEEDING_START_RIGHT, CONF_FEEDING_STOP,
+                          CONF_SLEEP_START, CONF_WAKE_UP, CONF_DIAPER_PEE, CONF_DIAPER_POO, CONF_DIAPER_BOTH]:
+            entity_config = current_options.get(config_key)
+            if entity_config:
+                # Check if this includes a button action
+                if ":" in str(entity_config):
+                    entity_id, button_action = entity_config.split(":", 1)
+                    currently_mapped.append(entity_id)
+                    current_button_actions[entity_id] = button_action
+                else:
+                    currently_mapped.append(entity_config)
 
         return self.async_show_form(
             step_id="select_entities",
@@ -161,26 +204,32 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
     ) -> FlowResult:
         """Step 2: Assign actions to selected entities."""
         if user_input is not None:
-            # Build the final configuration mapping
+            # Build the final configuration mapping using the correct const keys
             final_config = {}
             
             for entity in self.current_entities:
                 action = user_input.get(f"action_{entity}")
+                button_action = user_input.get(f"button_action_{entity}", "").strip()
+                
                 if action and action != "none":
-                    # Map action back to config key
+                    # Map action back to config key using constants
                     action_to_config = {
-                        "feeding_start_left": "feeding_start_left_entity",
-                        "feeding_start_right": "feeding_start_right_entity",
-                        "feeding_stop": "feeding_stop_entity",
-                        "sleep_start": "sleep_start_entity", 
-                        "wake_up": "wake_up_entity",
-                        "diaper_pee": "diaper_pee_entity",
-                        "diaper_poo": "diaper_poo_entity",
-                        "diaper_both": "diaper_both_entity",
+                        "feeding_start_left": CONF_FEEDING_START_LEFT,
+                        "feeding_start_right": CONF_FEEDING_START_RIGHT,
+                        "feeding_stop": CONF_FEEDING_STOP,
+                        "sleep_start": CONF_SLEEP_START, 
+                        "wake_up": CONF_WAKE_UP,
+                        "diaper_pee": CONF_DIAPER_PEE,
+                        "diaper_poo": CONF_DIAPER_POO,
+                        "diaper_both": CONF_DIAPER_BOTH,
                     }
                     config_key = action_to_config.get(action)
                     if config_key:
-                        final_config[config_key] = entity
+                        # Store entity with optional button action
+                        if button_action:
+                            final_config[config_key] = f"{entity}:{button_action}"
+                        else:
+                            final_config[config_key] = entity
 
             return self.async_create_entry(title="", data=final_config)
 
@@ -195,27 +244,19 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             # Get current action for this entity (if any)
             current_action = self.entity_mappings.get(entity)
             if current_action:
-                # Convert config key back to action key
-                config_to_action = {
-                    "feeding_start_left_entity": "feeding_start_left",
-                    "feeding_start_right_entity": "feeding_start_right",
-                    "feeding_stop_entity": "feeding_stop",
-                    "sleep_start_entity": "sleep_start",
-                    "wake_up_entity": "wake_up", 
-                    "diaper_pee_entity": "diaper_pee",
-                    "diaper_poo_entity": "diaper_poo",
-                    "diaper_both_entity": "diaper_both",
-                }
-                current_action = config_to_action.get(current_action, "none")
+                # current_action is already the action key
+                pass
             else:
                 current_action = "none"
 
-            # Create action choices
+            # Create action choices with support for specific button actions
             action_choices = [{"value": "none", "label": "No Action"}]
             for action_key, action_label in BABY_ACTIONS.items():
                 action_choices.append({"value": action_key, "label": action_label})
 
-            schema_dict[vol.Optional(f"action_{entity}", default=current_action)] = (
+            # Add field with entity name as label for clarity
+            field_label = f"{entity_name} ({entity})"
+            schema_dict[vol.Optional(f"action_{entity}", default=current_action, description=field_label)] = (
                 selector.SelectSelector(
                     selector.SelectSelectorConfig(
                         options=action_choices,
@@ -223,6 +264,20 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                     )
                 )
             )
+            
+            # If this is a button entity, add option for specific action selection
+            if entity.startswith("button."):
+                # Get existing button action if any
+                existing_button_action = getattr(self, 'entity_button_actions', {}).get(entity, "")
+                
+                # Add an optional field for specific button action
+                schema_dict[vol.Optional(f"button_action_{entity}", default=existing_button_action, description=f"Specific Action for {entity_name}")] = (
+                    selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            placeholder="e.g., arrow_left_hold, arrow_right_click (optional)"
+                        )
+                    )
+                )
 
         return self.async_show_form(
             step_id="assign_actions",
@@ -231,6 +286,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                 "help_text": (
                     "Assign baby care actions to your selected entities. "
                     "Each entity can trigger one action when its state changes. "
+                    "For buttons with specific actions (like arrow_left_hold), enter the action name below the dropdown. "
                     "Select 'No Action' to leave an entity unmapped."
                 )
             },
