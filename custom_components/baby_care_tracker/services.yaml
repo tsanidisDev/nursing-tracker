@@ -118,3 +118,60 @@ log_growth:
       description: Optional notes about the measurement
       selector:
         text:
+
+update_button_mapping:
+  name: Update Button Mapping
+  description: Add or update a button mapping configuration
+  fields:
+    entity_id:
+      name: Entity ID
+      description: The entity ID to map
+      required: true
+      selector:
+        entity:
+          domain: [button, switch, input_button, binary_sensor]
+    trigger_action:
+      name: Trigger Action
+      description: Specific trigger action (optional, for buttons)
+      selector:
+        text:
+    baby_care_action:
+      name: Baby Care Action
+      description: The baby care action to trigger
+      required: true
+      selector:
+        select:
+          options:
+            - label: Start Left Breast Feeding
+              value: feeding_start_left
+            - label: Start Right Breast Feeding
+              value: feeding_start_right
+            - label: Stop Feeding
+              value: feeding_stop
+            - label: Start Sleep
+              value: sleep_start
+            - label: Wake Up
+              value: wake_up
+            - label: Log Pee Diaper
+              value: diaper_pee
+            - label: Log Poo Diaper
+              value: diaper_poo
+            - label: Log Both (Pee & Poo)
+              value: diaper_both
+
+remove_button_mapping:
+  name: Remove Button Mapping
+  description: Remove a button mapping configuration
+  fields:
+    entity_id:
+      name: Entity ID
+      description: The entity ID to remove mapping from
+      required: true
+      selector:
+        entity:
+          domain: [button, switch, input_button, binary_sensor]
+    specific_action:
+      name: Specific Action
+      description: Specific action to remove (optional)
+      selector:
+        text:

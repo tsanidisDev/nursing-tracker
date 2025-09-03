@@ -177,6 +177,28 @@ class BabyCareCoordinator(DataUpdateCoordinator):
             }),
         )
 
+        # Button mapping management services
+        self.hass.services.async_register(
+            DOMAIN,
+            "update_button_mapping",
+            self._handle_update_button_mapping,
+            schema=vol.Schema({
+                vol.Required("entity_id"): cv.string,
+                vol.Optional("trigger_action"): cv.string,
+                vol.Required("baby_care_action"): cv.string,
+            }),
+        )
+
+        self.hass.services.async_register(
+            DOMAIN,
+            "remove_button_mapping",
+            self._handle_remove_button_mapping,
+            schema=vol.Schema({
+                vol.Required("entity_id"): cv.string,
+                vol.Optional("specific_action"): cv.string,
+            }),
+        )
+
     async def async_unregister_services(self) -> None:
         """Unregister services."""
         services = [
@@ -187,6 +209,8 @@ class BabyCareCoordinator(DataUpdateCoordinator):
             SERVICE_LOG_WAKE_UP,
             SERVICE_LOG_BOTTLE_FEEDING,
             SERVICE_LOG_GROWTH,
+            "update_button_mapping",
+            "remove_button_mapping",
         ]
         
         for service in services:
@@ -527,6 +551,86 @@ class BabyCareCoordinator(DataUpdateCoordinator):
         self._data["activities"].append(activity)
         await self._async_save_data()
         _LOGGER.info(f"Logged growth measurement")
+
+    async def _handle_update_button_mapping(self, call: ServiceCall) -> None:
+        """Handle update button mapping service call."""
+        entity_id = call.data["entity_id"]
+        trigger_action = call.data.get("trigger_action")
+        baby_care_action = call.data["baby_care_action"]
+        
+        # Map baby care action to config key
+        action_to_config = {
+            "feeding_start_left": CONF_FEEDING_START_LEFT,
+            "feeding_start_right": CONF_FEEDING_START_RIGHT,
+            "feeding_stop": CONF_FEEDING_STOP,
+            "sleep_start": CONF_SLEEP_START,
+            "wake_up": CONF_WAKE_UP,
+            "diaper_pee": CONF_DIAPER_PEE,
+            "diaper_poo": CONF_DIAPER_POO,
+            "diaper_both": CONF_DIAPER_BOTH,
+        }
+        
+        config_key = action_to_config.get(baby_care_action)
+        if not config_key:
+            _LOGGER.error(f"Invalid baby care action: {baby_care_action}")
+            return
+            
+        # Update the config entry options
+        new_options = dict(self.entry.options)
+        
+        # Remove any existing mapping for this config key
+        new_options.pop(config_key, None)
+        
+        # Add new mapping
+        if trigger_action:
+            new_options[config_key] = f"{entity_id}:{trigger_action}"
+        else:
+            new_options[config_key] = entity_id
+            
+        # Update the config entry
+        self.hass.config_entries.async_update_entry(
+            self.entry, options=new_options
+        )
+        
+        # Restart entity listeners
+        await self.async_remove_entity_listeners()
+        await self.async_setup_entity_listeners()
+        
+        _LOGGER.info(f"Updated button mapping: {entity_id} -> {baby_care_action}")
+
+    async def _handle_remove_button_mapping(self, call: ServiceCall) -> None:
+        """Handle remove button mapping service call."""
+        entity_id = call.data["entity_id"]
+        specific_action = call.data.get("specific_action")
+        
+        # Find and remove the mapping
+        new_options = dict(self.entry.options)
+        
+        # Look for the entity in all config keys
+        for config_key in [CONF_FEEDING_START_LEFT, CONF_FEEDING_START_RIGHT, CONF_FEEDING_STOP,
+                          CONF_SLEEP_START, CONF_WAKE_UP, CONF_DIAPER_PEE, CONF_DIAPER_POO, CONF_DIAPER_BOTH]:
+            entity_config = new_options.get(config_key)
+            if entity_config:
+                # Check if this matches our entity (with or without specific action)
+                if ":" in str(entity_config):
+                    config_entity, config_action = entity_config.split(":", 1)
+                    if config_entity == entity_id and (not specific_action or config_action == specific_action):
+                        new_options.pop(config_key, None)
+                        break
+                elif entity_config == entity_id and not specific_action:
+                    new_options.pop(config_key, None)
+                    break
+        
+        # Update the config entry
+        self.hass.config_entries.async_update_entry(
+            self.entry, options=new_options
+        )
+        
+        # Restart entity listeners
+        await self.async_remove_entity_listeners()
+        await self.async_setup_entity_listeners()
+        
+        _LOGGER.info(f"Removed button mapping: {entity_id}")
 
     # Helper methods for sensors
     def get_daily_activities(self, activity_type: str) -> List[Dict[str, Any]]:

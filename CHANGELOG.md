@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-09-03
+
+### Added - Major Dashboard Interface
+- **🎛️ Custom Dashboard Panel**: New dedicated sidebar menu for Baby Care Tracker
+- **🔧 Device-First Configuration**: Similar to Home Assistant automation builder
+- **📱 Visual Button Mapping**: Intuitive interface for managing device mappings
+- **🚀 Real-Time Management**: Add/remove mappings without restart
+- **📊 Current Mappings View**: See all configured button mappings in one place
+
+### Enhanced - Automation-Style Workflow
+- **Step 1: Select Device**: Choose from dropdown of available devices
+- **Step 2: Configure Actions**: Assign baby care actions to device triggers
+- **Dynamic Trigger Detection**: Automatically discovers device-specific triggers
+- **One-Click Management**: Easy add/remove buttons for mappings
+
+### Technical - Dashboard Implementation
+- **Custom Panel Registration**: Integrated into Home Assistant sidebar
+- **HTTP View Server**: Serves dashboard JavaScript and CSS files
+- **Service-Based Management**: `update_button_mapping` and `remove_button_mapping` services
+- **Dynamic Config Updates**: Modifies integration options through services
+- **Device/Entity Registry Integration**: Smart device and trigger discovery
+
+### Improved - User Experience
+- **Familiar Workflow**: Matches Home Assistant automation builder UX
+- **Visual Feedback**: See all mappings and their status
+- **No Config Menus**: Direct access from sidebar, no digging through settings
+- **Mobile Friendly**: Responsive design works on all devices
+- **Loading States**: Progress indicators during device discovery
+
 ## [1.0.5] - 2025-09-03
 
 ### Fixed

@@ -59,85 +59,70 @@ git push origin v1.0.0
 2. **Optional Birth Date**: For age tracking
 3. **Configure Button Mapping** (optional but powerful!)
 
-### Button Mapping - Enhanced UX with Specific Actions
+### Button Mapping - New Dashboard Interface
 
-The integration now features a **2-step configuration process** with support for **specific button actions**:
+The integration now features a **dedicated dashboard** for managing button mappings, similar to Home Assistant's automation builder:
 
-#### **Step 1: Select Your Entities**
-1. Go to **Integration Settings** → **Configure**
-2. **Select entities** you want to use from the multi-select dropdown
-3. Choose from: buttons, switches, input_buttons, binary_sensors
+#### **Accessing the Dashboard**
+1. Go to **Home Assistant sidebar** → **Baby Care Tracker**
+2. Or visit `/baby-care-tracker` in your Home Assistant URL
 
-#### **Step 2: Assign Actions**
-1. For each selected entity, choose what action it should trigger:
-   - **Start Left Breast Feeding**
-   - **Start Right Breast Feeding** 
-   - **Stop Feeding**
-   - **Start Sleep**
-   - **Wake Up**
-   - **Log Pee Diaper**
-   - **Log Poo Diaper**
-   - **Log Both (Pee & Poo)**
-   - **No Action** (to leave unmapped)
+#### **Device-First Configuration (Like HA Automations)**
+The new interface follows Home Assistant's familiar pattern:
 
-2. **For button entities**, you can also specify **specific button actions**:
-   - Enter specific action names like `arrow_left_hold`, `arrow_right_click`
-   - This allows mapping individual button actions instead of any button press
+**Step 1: Select Device**
+- Choose from a dropdown of available devices
+- See all devices with button/switch entities
+- Displays device name and model
 
-#### **Button Action Examples:**
-```
-Entity: button.ikea_tradfri_shortcut_button
-Action: Start Left Breast Feeding  
-Specific Action: arrow_left_hold
+**Step 2: Configure Actions**
+- For each entity on the device, see available triggers
+- Select what baby care action each trigger should perform
+- Add multiple mappings for the same device
 
-Entity: button.ikea_tradfri_shortcut_button
-Action: Start Right Breast Feeding
-Specific Action: arrow_right_hold
+#### **Available Device Triggers**
+The dashboard automatically detects available triggers:
 
-Entity: button.ikea_tradfri_shortcut_button  
-Action: Stop Feeding
-Specific Action: arrow_left_click
-```
+**For Buttons (like IKEA TRÅDFRI):**
+- `Arrow Left Hold` → Start Left Breast Feeding
+- `Arrow Right Hold` → Start Right Breast Feeding  
+- `Arrow Left Click` → Stop Feeding
+- `Button Press` → Any button action
+- And more device-specific triggers...
 
-#### **Benefits of New UX:**
-- ✅ **Entity-First Approach**: Select your available devices first
-- ✅ **Clear Action Assignment**: Easy dropdown for each entity
-- ✅ **Flexible Mapping**: One entity, one action (or none)
-- ✅ **Saved Configuration**: Settings are properly preserved
-- ✅ **Better Organization**: See all your mappings at once
-- ✅ **Specific Button Actions**: Map individual button actions like `arrow_left_hold`
+**For Switches/Sensors:**
+- `State Change` → On/off triggers
 
-#### **Supported Button Actions:**
-For IKEA TRÅDFRI Shortcut Button (E2001/E2002):
-- `arrow_left_click` - Arrow left push
-- `arrow_left_hold` - Arrow left hold  
-- `arrow_left_release` - Arrow left release
-- `arrow_right_click` - Arrow right push
-- `arrow_right_hold` - Arrow right hold
-- `arrow_right_release` - Arrow right release
-- `on` - Top button push
-- `brightness_move_up` - Top button hold
-- `brightness_stop` - Top button release
-- `off` - Bottom button push  
-- `brightness_move_down` - Bottom button hold
+#### **Benefits of Dashboard Interface:**
+- ✅ **Familiar UX**: Same pattern as HA automations
+- ✅ **Device-Centric**: Select device first, then configure actions
+- ✅ **Visual Management**: See all mappings in one place
+- ✅ **Easy Removal**: Remove mappings with one click
+- ✅ **Real-Time Updates**: Changes apply immediately
+- ✅ **No Config Menus**: No need to dig into integration settings
 
 #### **Example Workflow:**
 ```
-Step 1: Select Entities
-☑️ button.ikea_tradfri_shortcut_button
-☑️ switch.diaper_switch_1
-☑️ switch.diaper_switch_2
-
-Step 2: Assign Actions
-button.ikea_tradfri_shortcut_button → Start Left Breast Feeding
-  └── Specific Action: arrow_left_hold
-button.ikea_tradfri_shortcut_button → Start Right Breast Feeding  
-  └── Specific Action: arrow_right_hold
-switch.diaper_switch_1 → Log Pee Diaper
-switch.diaper_switch_2 → Log Poo Diaper
+1. Open Baby Care Tracker dashboard
+2. Select "IKEA TRÅDFRI Shortcut Button"
+3. Configure:
+   - Arrow Left Hold → Start Left Breast Feeding
+   - Arrow Right Hold → Start Right Breast Feeding
+   - Top Button → Stop Feeding
+4. Click "Add" for each mapping
+5. See all mappings listed below
 ```
 
-**Note**: You can map the same button entity multiple times with different specific actions!
+#### **Dashboard Features:**
+- **Current Mappings List**: See all configured button mappings
+- **Device Detection**: Automatically finds devices with button entities
+- **Action Dropdown**: Choose from all baby care actions
+- **Remove Mappings**: One-click removal of unwanted mappings
+- **Live Updates**: Changes take effect immediately without restart
+
+#### **Legacy Config Flow Still Available:**
+You can still use the traditional config flow via:
+**Integration Settings** → **Configure** (for advanced users)
 
 ### Dashboard Usage
 
