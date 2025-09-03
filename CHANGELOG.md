@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-09-03
+
+### Added - Enhanced Dashboard Interface with Individual Function Cards
+- **🎯 Individual Baby Care Cards**: Each function (feeding, sleep, diaper) has its own interactive card
+- **💎 Modern Card-Based UI**: Beautiful, responsive design with visual status indicators
+- **🔄 Three-Step Workflow**: Device Selection → Action Selection → Baby Care Mapping
+- **✨ Visual Feedback System**: Action chips highlight selections, cards show mapping status
+- **📱 Mobile-Responsive Design**: Optimized for both desktop and mobile devices
+- **🎨 Professional Styling**: Home Assistant themed colors and modern aesthetics
+
+### Enhanced - User Experience Improvements
+- **🔍 Smart Device Discovery**: Automatic detection of compatible devices and actions
+- **💡 Interactive Action Chips**: Click-to-select device actions with visual feedback
+- **📋 Mapping Status Display**: Clear indicators showing which functions are mapped
+- **🗑️ One-Click Removal**: Easy removal buttons on each mapping
+- **📢 Toast Notifications**: Helpful guidance messages for user actions
+- **📊 Complete Mappings Overview**: Dedicated section showing all current mappings
+
+### Technical - Dashboard Architecture Enhancements
+- **🏗️ Redesigned UI Components**: Complete rebuild of dashboard interface
+- **🎛️ Enhanced State Management**: Better handling of device selections and mappings
+- **🔧 Improved Event Handling**: More robust click handlers and visual feedback
+- **📐 Grid-Based Layout**: Responsive CSS Grid for optimal card arrangement
+- **🎪 Animation Support**: Smooth transitions and hover effects
+- **📦 Modular Component Design**: Clean separation of UI concerns
+
+### UI/UX - Design System Updates
+- **🎨 Modern Card Design**: Elevated cards with proper shadows and borders
+- **🌈 Status Color Coding**: Green for mapped, gray for unmapped functions
+- **📏 Consistent Spacing**: Proper margins, padding, and typography hierarchy
+- **🔤 Icon Integration**: Meaningful icons for each baby care function
+- **📱 Touch-Friendly**: Optimized for touch devices with proper sizing
+- **♿ Accessibility**: Proper ARIA labels and keyboard navigation support
+
 ## [1.1.0] - 2025-09-03
 
 ### Added - Major Dashboard Interface
